@@ -1,0 +1,45 @@
+﻿@model BorsaTakip.MVC.Models.CoinDetailsViewModel
+
+<h2>Coin Detayları</h2>
+
+@if (Model == null)
+{
+    <div class="alert alert-danger">Veri bulunamadı.</div>
+}
+else
+{
+    var change24h = Model.CoinDetails.GetProperty("market_data").GetProperty("price_change_percentage_24h").GetDecimal();
+    var isUp = change24h >= 0;
+    var changeColor = isUp ? "text-success" : "text-danger";
+    var changeIcon = isUp ? "▲" : "▼";
+
+    <div>
+        <strong>Coin Adı:</strong> @Model.CoinDetails.GetProperty("name").GetString() <br />
+        <strong>Simge:</strong> @Model.CoinDetails.GetProperty("symbol").GetString() <br />
+        <strong>Güncel Fiyat (USD):</strong> $@Model.CoinDetails.GetProperty("market_data").GetProperty("current_price").GetProperty("usd").GetDecimal() <br />
+        <strong>24 Saatlik Değişim:</strong>
+        <span class="@changeColor">
+            @changeIcon @change24h.ToString("0.#####") %
+        </span>
+        <br />
+    </div>
+
+    <h3>Son 60 Günlük Günlük Fiyatlar</h3>
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Tarih</th>
+                <th>Fiyat (USD)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pricePoint in Model.PriceHistory)
+            {
+                <tr>
+                    <td>@pricePoint.Date.ToString("dd MMM yyyy")</td>
+                    <td>@pricePoint.Price.ToString("F2")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

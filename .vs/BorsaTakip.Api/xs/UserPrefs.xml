@@ -1,0 +1,51 @@
+﻿<Properties StartupConfiguration="Birden Çok Proje">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.BorsaTakip.MVC PreferredExecutionTarget="/Applications/Google Chrome.app" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations>
+    <MultiItemSolutionRunConfiguration Id="Birden Çok Proje" Name="Birden Çok Proje">
+      <Items>
+        <StartupItem ItemId="{1CF57040-5AE8-4DDE-B6B3-37176F8CEA5B}" ItemName="BorsaTakip.Api" ConfigurationId="https" />
+        <StartupItem ItemId="{48AE18FF-B59E-4715-98ED-3F617423A81B}" ItemName="BorsaTakip.MVC" ConfigurationId="https" />
+      </Items>
+    </MultiItemSolutionRunConfiguration>
+  </MultiItemStartupConfigurations>
+  <MonoDevelop.Ide.Workbench ActiveDocument="BorsaTakip.Api/Models/LoginModel.cs">
+    <Files>
+      <File FileName="BorsaTakip.Api/Controllers/CoinCommentsController.cs" Line="42" Column="1" IsPinned="True" />
+      <File FileName="BorsaTakip.MVC/Models/LoginViewModel.cs" Line="1" Column="1" />
+      <File FileName="BorsaTakip.Api/Migrations/BorsaTakipDbContextModelSnapshot.cs" Line="21" Column="27" />
+      <File FileName="BorsaTakip.Api/Models/LoginModel.cs" Line="6" Column="45" />
+      <File FileName="BorsaTakip.Api/Models/RegisterModel.cs" Line="1" Column="1" />
+      <File FileName="BorsaTakip.Api/Models/CoinComment.cs" Line="16" Column="1" />
+      <File FileName="BorsaTakip.Api/Models/ApplicationUser.cs" Line="1" Column="1" />
+      <File FileName="BorsaTakip.Api/Models/BorsaTakipDbContext.cs" Line="18" Column="1" />
+      <File FileName="BorsaTakip.Api/Data/BorsaTakipDbContext.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="BorsaTakip.Api" expanded="True">
+            <Node name="BorsaTakip.Api" expanded="True">
+              <Node name="Controllers" expanded="True" />
+              <Node name="Data" expanded="True" />
+              <Node name="Migrations" expanded="True" />
+              <Node name="Models" expanded="True">
+                <Node name="LoginModel.cs" selected="True" />
+              </Node>
+              <Node name="Properties" expanded="True" />
+            </Node>
+            <Node name="BorsaTakip.MVC" expanded="True">
+              <Node name="Controllers" expanded="True" />
+              <Node name="Models" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.BorsaTakip.Api PreferredExecutionTarget="/Applications/Google Chrome.app" />
+</Properties>

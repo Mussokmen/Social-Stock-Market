@@ -1,0 +1,33 @@
+﻿@model List<BorsaTakip.MVC.Models.CoinPricePoint>
+
+@{
+    ViewData["Title"] = "Fiyat Geçmişi";
+    string coinId = ViewBag.CoinId as string ?? "Coin";
+}
+
+<h2>@coinId.ToUpper() - Son 60 Günlük Günlük Fiyatlar (USD)</h2>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-warning">Fiyat verisi bulunamadı.</div>
+}
+else
+{
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Tarih</th>
+                <th>Fiyat (USD)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pricePoint in Model)
+            {
+                <tr>
+                    <td>@pricePoint.Date.ToString("dd MMM yyyy")</td>
+                    <td>@pricePoint.Price.ToString("F2")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

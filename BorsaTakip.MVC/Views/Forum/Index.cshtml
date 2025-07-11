@@ -1,0 +1,245 @@
+﻿@model List<BorsaTakip.MVC.Models.CoinCommentViewModel>
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Forum - Tüm Yorumlar";
+    var userName = HttpContextAccessor.HttpContext.User.Identity?.Name ?? "";
+    var isAuthenticated = HttpContextAccessor.HttpContext.User.Identity?.IsAuthenticated ?? false;
+}
+
+<h2 class="mb-4 text-white">Forum - Tüm Yorumlar</h2>
+
+@section Styles {
+    <style>
+        body {
+            background: url('/images/forum1.png') no-repeat center center fixed;
+            background-size: cover;
+            background-color: #e0f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .comment-card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: box-shadow 0.3s ease;
+        }
+
+            .comment-card:hover {
+                box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            background-color: #1DA1F2;
+            color: white;
+            font-weight: 700;
+            font-size: 1.25rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            margin-right: 12px;
+            flex-shrink: 0;
+            text-transform: uppercase;
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .username {
+            font-weight: 700;
+            color: #0d1117;
+        }
+
+        .comment-date {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-left: auto;
+        }
+
+        .coin-badge {
+            font-style: italic;
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+
+        .comment-text {
+            font-size: 1rem;
+            color: #24292e;
+            white-space: pre-wrap;
+        }
+
+        .comment-form {
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        .btn-twitter {
+            background-color: #1DA1F2;
+            border: none;
+            font-weight: 600;
+        }
+
+            .btn-twitter:hover {
+                background-color: #0d95e8;
+            }
+
+        #coinList {
+            max-height: 160px;
+            overflow-y: auto;
+            border-radius: 8px;
+        }
+
+        .btn-reply {
+            margin-top: 12px;
+        }
+    </style>
+}
+
+<div class="row">
+    <div class="col-md-5">
+        @if (isAuthenticated)
+        {
+            <form id="commentForm" method="post" asp-action="AddComment" asp-controller="Forum" class="comment-form">
+                <div class="mb-3">
+                    <label for="Username" class="form-label">Kullanıcı Adı</label>
+                    <input type="text"
+                           class="form-control form-control-lg"
+                           id="Username"
+                           name="Username"
+                           placeholder="Adınız"
+                           value="@userName"
+                           readonly />
+                </div>
+
+                <div class="mb-3 position-relative">
+                    <label for="CoinId" class="form-label">Coin ID</label>
+                    <input type="text" class="form-control form-control-lg" id="CoinId" name="CoinId" autocomplete="off" placeholder="örn: bitcoin" required />
+                    <ul id="coinList" class="list-group position-absolute shadow-sm rounded" style="z-index: 1000; width: 100%; display: none;"></ul>
+                </div>
+
+                <div class="mb-3">
+                    <label for="Comment" class="form-label">Yorum</label>
+                    <textarea class="form-control form-control-lg" id="Comment" name="Comment" rows="5" placeholder="Yorumunuzu yazın..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-twitter btn-lg w-100" id="submitBtn" disabled>
+                    Yorum Gönder
+                </button>
+            </form>
+        }
+        else
+        {
+            <div class="alert alert-warning">
+                Yorum yapmak için lütfen <a href="/Account/Login">giriş yapın</a> veya <a href="/Account/Register">kayıt olun</a>.
+            </div>
+        }
+    </div>
+
+    <div class="col-md-7">
+        @foreach (var comment in Model)
+        {
+            <div class="comment-card">
+                <div class="comment-header">
+                    <div class="avatar">@comment.Username.Substring(0, 1)</div>
+                    <div class="username">@comment.Username</div>
+                    <div class="comment-date">@comment.CreatedAt.ToString("dd MMM yyyy HH:mm")</div>
+                </div>
+                <div class="coin-badge">Coin: @comment.CoinId</div>
+                <div class="comment-text">@comment.Comment</div>
+
+                <a asp-controller="Forum" asp-action="CommentDetails" asp-route-id="@comment.Id" class="btn btn-primary btn-sm btn-reply">
+                    Yanıtla
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>const popularCoins = [
+            { id: "bitcoin", name: "Bitcoin" },
+            { id: "ethereum", name: "Ethereum" },
+            { id: "tether", name: "Tether" },
+            { id: "binancecoin", name: "Binance Coin" },
+            { id: "cardano", name: "Cardano" },
+            { id: "solana", name: "Solana" },
+            { id: "ripple", name: "XRP" },
+            { id: "polkadot", name: "Polkadot" },
+            { id: "dogecoin", name: "Dogecoin" },
+            { id: "usd-coin", name: "USD Coin" },
+            { id: "avalanche", name: "Avalanche" },
+            { id: "terra-luna", name: "Terra Luna" },
+            { id: "chainlink", name: "Chainlink" },
+            { id: "litecoin", name: "Litecoin" },
+            { id: "bitcoin-cash", name: "Bitcoin Cash" },
+            { id: "algorand", name: "Algorand" },
+            { id: "stellar", name: "Stellar" },
+            { id: "vechain", name: "VeChain" },
+            { id: "internet-computer", name: "Internet Computer" },
+            { id: "polygon-pos", name: "Polygon" }
+        ];
+
+        const coinInput = document.getElementById('CoinId');
+        const coinList = document.getElementById('coinList');
+        const submitBtn = document.getElementById('submitBtn');
+
+        if (coinInput) {
+            coinInput.addEventListener('input', function () {
+                const val = this.value.trim().toLowerCase();
+
+                if (val.length === 0) {
+                    coinList.style.display = 'none';
+                    submitBtn.disabled = true;
+                    return;
+                }
+
+                const filtered = popularCoins.filter(c => c.id.includes(val) || c.name.toLowerCase().includes(val));
+                if (filtered.length === 0) {
+                    coinList.style.display = 'none';
+                    submitBtn.disabled = true;
+                    return;
+                }
+
+                coinList.innerHTML = '';
+                filtered.forEach(c => {
+                    const li = document.createElement('li');
+                    li.textContent = c.name + " (" + c.id + ")";
+                    li.classList.add('list-group-item', 'list-group-item-action');
+                    li.style.cursor = 'pointer';
+                    li.addEventListener('click', () => {
+                        coinInput.value = c.id;
+                        coinList.style.display = 'none';
+                        submitBtn.disabled = false;
+                    });
+                    coinList.appendChild(li);
+                });
+
+                coinList.style.display = 'block';
+                submitBtn.disabled = true;
+            });
+        }
+
+        if (document.getElementById('commentForm')) {
+            document.getElementById('commentForm').addEventListener('submit', function (e) {
+                if (!popularCoins.some(c => c.id === coinInput.value.trim())) {
+                    e.preventDefault();
+                    alert("Lütfen listeden geçerli bir Coin seçin.");
+                    coinInput.focus();
+                }
+            });
+        }</script>
+}

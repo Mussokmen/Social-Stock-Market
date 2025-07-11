@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "H74Pq6crGipOZRgWK+lJ8KOndQwSJvTfYlIsyE8tWD4=",
+  "Source": "BorsaTakip.Api",
+  "BasePath": "_content/BorsaTakip.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

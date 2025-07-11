@@ -1,0 +1,122 @@
+﻿@model BorsaTakip.MVC.Models.CoinCommentViewModel
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Yorum Detayları";
+    var userName = HttpContextAccessor.HttpContext.User.Identity?.Name ?? "";
+    var isAuthenticated = HttpContextAccessor.HttpContext.User.Identity?.IsAuthenticated ?? false;
+}
+
+<div class="container py-4">
+    <div class="comment-card mb-4 p-4 rounded shadow-sm bg-white">
+        <div class="d-flex align-items-center mb-2">
+            <div class="avatar">@Model.Username.Substring(0, 1)</div>
+            <div class="ms-3">
+                <strong class="username">@Model.Username</strong><br />
+                <small class="text-muted">@Model.CreatedAt.ToString("dd MMM yyyy HH:mm")</small>
+            </div>
+        </div>
+        <p class="comment-text mt-3">@Model.Comment</p>
+    </div>
+
+    <h5 class="mb-3 text-dark">Yanıtlar</h5>
+    @if (Model.Replies != null && Model.Replies.Count > 0)
+    {
+        foreach (var reply in Model.Replies)
+        {
+            <div class="reply-card mb-3 p-3 rounded bg-light">
+                <div class="d-flex align-items-center mb-2">
+                    <div class="avatar avatar-sm">@reply.Username.Substring(0, 1)</div>
+                    <div class="ms-2">
+                        <strong class="username">@reply.Username</strong><br />
+                        <small class="text-muted">@reply.CreatedAt.ToString("dd MMM yyyy HH:mm")</small>
+                    </div>
+                </div>
+                <p class="mb-0">@reply.Comment</p>
+            </div>
+        }
+    }
+    else
+    {
+        <p class="text-muted">Henüz yanıt yok.</p>
+    }
+
+    @if (isAuthenticated)
+    {
+        <form method="post" asp-action="CommentDetails" class="mt-4">
+            <input type="hidden" name="parentId" value="@Model.Id" />
+            <div class="mb-3">
+                <textarea name="replyComment" class="form-control" rows="3" placeholder="Yanıtınızı yazın..." required></textarea>
+            </div>
+            <input type="hidden" name="username" value="@userName" />
+            <button type="submit" class="btn btn-primary">Yanıtla</button>
+        </form>
+
+    }
+    else
+    {
+        <p class="text-secondary mt-4">
+            Yanıt vermek için <a href="/Account/Login" class="text-primary">giriş yapın</a> veya
+            <a href="/Account/Register" class="text-primary">kayıt olun</a>.
+        </p>
+    }
+</div>
+
+<style>
+    body {
+        background: #e0f7fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #24292e;
+    }
+
+    .comment-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        color: #24292e;
+    }
+
+    .reply-card {
+        background: #f8f9fa;
+        color: #24292e;
+        border-radius: 12px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+
+    .avatar {
+        width: 48px;
+        height: 48px;
+        background-color: #1DA1F2;
+        color: white;
+        font-weight: 700;
+        font-size: 1.5rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+        text-transform: uppercase;
+    }
+
+    .avatar-sm {
+        width: 32px;
+        height: 32px;
+        font-size: 1.1rem;
+    }
+
+    .username {
+        font-weight: 700;
+        font-size: 1rem;
+    }
+
+    .comment-text {
+        font-size: 1.1rem;
+        line-height: 1.5;
+    }
+
+    a.text-primary:hover {
+        text-decoration: underline;
+        color: #0d6efd !important;
+    }
+</style>

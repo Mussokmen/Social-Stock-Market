@@ -1,0 +1,56 @@
+﻿@model BorsaTakip.MVC.Models.LoginViewModel
+
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        background: url('/images/A1.jpg') no-repeat center center fixed;
+        background-size: cover;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: white;
+    }
+
+    .login-container {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .login-form {
+        background: rgba(0, 0, 0, 0.75);
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.6);
+        width: 350px;
+    }
+
+        .login-form label {
+            font-weight: 600;
+        }
+
+    .btn-primary {
+        background-color: #0d6efd;
+        border: none;
+    }
+</style>
+
+<div class="login-container">
+    <form asp-action="Login" method="post" class="login-form">
+        <h3 class="mb-4 text-center">Borsa Takip - Giriş</h3>
+
+        <div class="mb-3">
+            <label asp-for="Username" class="form-label"></label>
+            <input asp-for="Username" class="form-control" />
+            <span asp-validation-for="Username" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label"></label>
+            <input asp-for="Password" type="password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Giriş Yap</button>
+    </form>
+</div>

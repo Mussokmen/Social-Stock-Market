@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 25.0.1706.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BorsaTakip.Api", "BorsaTakip.Api\BorsaTakip.Api.csproj", "{1CF57040-5AE8-4DDE-B6B3-37176F8CEA5B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BorsaTakip.MVC", "BorsaTakip.MVC\BorsaTakip.MVC.csproj", "{48AE18FF-B59E-4715-98ED-3F617423A81B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1CF57040-5AE8-4DDE-B6B3-37176F8CEA5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CF57040-5AE8-4DDE-B6B3-37176F8CEA5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CF57040-5AE8-4DDE-B6B3-37176F8CEA5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CF57040-5AE8-4DDE-B6B3-37176F8CEA5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48AE18FF-B59E-4715-98ED-3F617423A81B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48AE18FF-B59E-4715-98ED-3F617423A81B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48AE18FF-B59E-4715-98ED-3F617423A81B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48AE18FF-B59E-4715-98ED-3F617423A81B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CE992B43-0B14-4321-A8E1-E87ED2EA49F5}
+	EndGlobalSection
+EndGlobal

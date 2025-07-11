@@ -1,0 +1,50 @@
+﻿@{
+    ViewData["Title"] = "Coin Arama";
+}
+
+<h2>Coin Ara</h2>
+
+<input id="searchInput" class="form-control" placeholder="Coin adı yazın..." autocomplete="off" />
+
+<ul id="suggestions" class="list-group mt-2" style="max-width:400px;"></ul>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>$(document).ready(function() {
+            $('#searchInput').on('input', function () {
+                let query = $(this).val();
+                if (query.length === 0) {
+                    $('#suggestions').empty();
+                    return;
+                }
+
+                $.ajax({
+                    url: '/Coin/SearchCoins',
+                    type: 'GET',
+                    data: { query: query },
+                    success: function(data) {
+                        let suggestions = $('#suggestions');
+                        suggestions.empty();
+
+                        if (data.length === 0) {
+                            suggestions.append('<li class="list-group-item">Sonuç bulunamadı</li>');
+                        } else {
+                            data.forEach(function(coin) {
+                                suggestions.append(
+                                    `<li class="list-group-item list-group-item-action" style="cursor:pointer" data-id="${coin.id}">${coin.name}</li>`
+                                );
+                            });
+                        }
+                    }
+                });
+            });
+
+            $('#suggestions').on('click', 'li', function() {
+                let coinId = $(this).data('id');
+                if (coinId) {
+                    window.location.href = `/Coin/Details?id=${coinId}`;
+                }
+            });
+        });</script>
+}

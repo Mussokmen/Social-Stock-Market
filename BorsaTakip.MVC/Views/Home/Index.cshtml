@@ -1,0 +1,114 @@
+﻿@{
+    ViewData["Title"] = "Ana Sayfa";
+    var isAuthenticated = User.Identity?.IsAuthenticated ?? false;
+    var userName = isAuthenticated ? User.Identity.Name : null;
+}
+
+<style>
+    .hero {
+        background: url('/images/A1.avif') no-repeat center center fixed;
+        background-size: cover;
+        height: 70vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        text-shadow: 0 0 15px rgba(0,0,0,0.9);
+        text-align: center;
+        padding: 0 20px;
+    }
+
+    .row {
+        width: 100%;
+        max-width: 900px;
+    }
+
+    .col-md-4 {
+        display: flex;
+        justify-content: center;
+    }
+
+    .feature-card {
+        padding: 25px 20px;
+        border-radius: 12px;
+        background-color: #1e293b; /* Koyu mavi-gri ton */
+        box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+        margin-bottom: 30px;
+        margin-left: 20px; /* Burada sağa kaydırma için margin-left ekledik */
+        text-align: center;
+        color: #e0e7ff; /* Açık mavi / lila ton */
+        font-weight: 600;
+        line-height: 1.5;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        width: 280px;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 28px rgba(0,0,0,0.6);
+    }
+
+    .feature-card h4 {
+        font-weight: 700;
+        margin-bottom: 15px;
+        color: #c7d2fe; /* Hafif açık lila */
+    }
+
+    .feature-card p {
+        font-size: 1rem;
+        color: #a5b4fc; /* Daha açık mavi ton */
+    }
+
+    .cta-button {
+        margin-top: 20px;
+    }
+
+    .search-button {
+        margin-top: 15px;
+        background-color: #2563eb;
+        border-color: #2563eb;
+        font-weight: 600;
+        padding: 10px 25px;
+    }
+
+    .search-button:hover {
+        background-color: #1d4ed8;
+        border-color: #1d4ed8;
+    }
+</style>
+
+<div class="hero">
+    <h1>BorsaTakip ile Yatırımlarınızı Kolayca Yönetin</h1>
+    <p>Kripto yatırımlarını takip et, toplulukla yorum yap ve tartış, AI ile tavsiyeler al.</p>
+
+    @if (!isAuthenticated)
+    {
+        <a href="/Account/Register" class="btn btn-primary btn-lg cta-button">Hemen Kayıt Ol</a>
+    }
+
+    <a href="/Coin/Search" class="btn btn-primary btn-lg search-button">Coin Ara</a>
+</div>
+
+<div class="features container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="feature-card">
+                <h4>Canlı Veri Takibi</h4>
+                <p>En güncel kripto ve borsa verileri ile anlık takip imkanı.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card">
+                <h4>Topluluk Yorumları</h4>
+                <p>Yatırımlarınız hakkında diğer kullanıcılarla tartışma ve bilgi paylaşımı.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card">
+                <h4>AI Destekli Tavsiyeler</h4>
+                <p>Yapay zeka ile yatırım stratejileri ve sorularınıza hızlı cevaplar.</p>
+            </div>
+        </div>
+    </div>
+</div>
