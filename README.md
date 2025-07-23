@@ -1,1 +1,2 @@
 # BorsaTakip
+# Social-Stock-Market
