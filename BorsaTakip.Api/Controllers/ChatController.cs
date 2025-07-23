@@ -16,8 +16,8 @@ namespace BorsaTakip.Api.Controllers
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly BorsaTakipDbContext _dbContext;
-        private const string OPENAI_API_KEY = "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";
-        private const string OPENROUTER_API_KEY = "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";
+        private const string OPENAI_API_KEY = "KENDI_API_KEYINI_GIR";
+        private const string OPENROUTER_API_KEY = "KENDI_API_KEYINI_GIR";
 
         public ChatController(IHttpClientFactory httpClientFactory, BorsaTakipDbContext dbContext)
         {
