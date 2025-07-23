@@ -13,7 +13,9 @@
         <div class="d-flex align-items-center mb-2">
             <div class="avatar">@Model.Username.Substring(0, 1)</div>
             <div class="ms-3">
-                <strong class="username">@Model.Username</strong><br />
+                <strong class="username">
+                    <a href="/Profile/Index?username=@Model.Username" style="color:#1d9bf0; font-weight:700; text-decoration:none;">@Model.Username</a>
+                </strong><br />
                 <small class="text-muted">@Model.CreatedAt.ToString("dd MMM yyyy HH:mm")</small>
             </div>
         </div>

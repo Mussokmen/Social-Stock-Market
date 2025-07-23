@@ -1,0 +1,240 @@
+@using Humanizer
+@model List<BorsaTakip.MVC.Models.CoinCommentViewModel>
+@{
+    ViewData["Title"] = "Takip Ettiklerimin Yorumları";
+    var pageSize = 10;
+    var totalCount = Model?.Count ?? 0;
+}
+<div class="forum-following-comments-wrapper">
+    <h2 class="forum-title">Takip Ettiklerinin Son Yorumları</h2>
+    @if (Model != null && Model.Count > 0)
+    {
+        <div id="yorumlar-container">
+            @for (int i = 0; i < Math.Min(pageSize, Model.Count); i++)
+            {
+                var comment = Model[i];
+                <div class="yorum-kart-modern" data-comment-id="@comment.Id">
+                    <div class="yorum-avatar">
+                        @if (!string.IsNullOrEmpty(comment.PhotoUrl))
+                        {
+                            <img src="@comment.PhotoUrl" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" />
+                        }
+                        else
+                        {
+                            @comment.Username.Substring(0,1).ToUpper()
+                        }
+                    </div>
+                    <div class="yorum-main">
+                        <div class="yorum-header">
+                            <a href="/Profile/Index?username=@comment.Username" style="color:#1d9bf0; font-weight:700; text-decoration:none; margin-right:8px;">@comment.Username</a>
+                            <span class="yorum-coin">@comment.CoinId</span>
+                            <span class="yorum-date" title="@comment.CreatedAt.ToString("dd MMM yyyy HH:mm")">
+                                @comment.CreatedAt.Humanize(false)
+                            </span>
+                            <span class="yorum-begeni">
+                                <button class="like-btn" data-id="@comment.Id" style="background:none;border:none;color:#1d9bf0;cursor:pointer;">👍</button>
+                                <span class="like-count">@comment.LikeCount</span>
+                            </span>
+                        </div>
+                        <div class="yorum-text">@comment.Comment</div>
+                    </div>
+                </div>
+            }
+        </div>
+        @if (Model.Count > pageSize)
+        {
+            <div style="text-align:center; margin-top:18px;">
+                <button id="dahaFazlaBtn" class="btn btn-outline-info">Daha fazla yükle</button>
+            </div>
+        }
+    }
+    else
+    {
+        <div style="color:#5677cc; font-style:italic; padding: 20px 0; text-align:center;">Takip ettiklerinden henüz hiç yorum yok.</div>
+    }
+</div>
+<style>
+body {
+    background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 50%, #81d4fa 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* Hafif bir pattern için SVG data-uri veya transparan PNG de eklenebilir */
+}
+.forum-following-comments-wrapper {
+    max-width: 800px;
+    margin: 40px auto 0 auto;
+    background: rgba(255,255,255,0.95);
+    border-radius: 24px;
+    box-shadow: 0 8px 32px rgba(29,155,240,0.10);
+    padding: 32px 32px 24px 32px;
+    backdrop-filter: blur(2px);
+}
+.forum-title {
+    color: #1d9bf0;
+    font-weight: 900;
+    font-size: 2em;
+    margin-bottom: 32px;
+    text-align: center;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 8px #e3eaf7;
+}
+.yorum-kart-modern {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    background: linear-gradient(90deg, #f7fafd 80%, #e3f2fd 100%);
+    border-radius: 16px;
+    box-shadow: 0 4px 18px #e3eaf7;
+    padding: 18px 28px 16px 20px;
+    margin-bottom: 26px;
+    transition: box-shadow 0.3s, transform 0.2s;
+    border: 1.5px solid #e3eaf7;
+}
+.yorum-kart-modern:hover {
+    box-shadow: 0 8px 32px #b3e5fc;
+    transform: translateY(-2px) scale(1.01);
+    border-color: #81d4fa;
+}
+.yorum-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffe082 0%, #81d4fa 100%);
+    color: #fff;
+    font-weight: 800;
+    font-size: 1.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px #e3eaf7;
+    margin-top: 2px;
+    overflow: hidden;
+}
+.yorum-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+.yorum-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.yorum-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 2px;
+}
+.yorum-coin {
+    background: linear-gradient(90deg, #ffe082 60%, #fffde7 100%);
+    color: #ff9800;
+    font-weight: 700;
+    font-size: 1.01em;
+    border-radius: 7px;
+    padding: 2px 10px;
+    margin-right: 8px;
+}
+.yorum-date {
+    color: #4a6fa5;
+    font-size: 0.98em;
+    font-weight: 500;
+}
+.yorum-begeni {
+    margin-left: auto;
+    color: #1d9bf0;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 1.08em;
+}
+.yorum-text {
+    font-size: 1.13em;
+    color: #34495e;
+    margin-left: 2px;
+    margin-top: 2px;
+}
+@@media (max-width: 700px) {
+    body { background: #e0f7fa; }
+    .forum-following-comments-wrapper { padding: 12px 2vw; border-radius: 12px; }
+    .yorum-kart-modern { flex-direction: column; gap: 8px; padding: 12px 8px; }
+    .yorum-avatar { width: 38px; height: 38px; font-size: 1.1em; }
+}
+</style> 
+@section Scripts {
+<script>
+    let allComments = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+    let pageSize = 10;
+    let currentIndex = pageSize;
+    const yorumlarContainer = document.getElementById('yorumlar-container');
+    const dahaFazlaBtn = document.getElementById('dahaFazlaBtn');
+
+    if (dahaFazlaBtn) {
+        dahaFazlaBtn.addEventListener('click', function () {
+            let next = allComments.slice(currentIndex, currentIndex + pageSize);
+            next.forEach(comment => {
+                let kart = document.createElement('div');
+                kart.className = 'yorum-kart-modern';
+                kart.setAttribute('data-comment-id', comment.Id);
+                kart.innerHTML = `
+                    <div class="yorum-avatar">
+                        ${comment.PhotoUrl ? `<img src="${comment.PhotoUrl}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" />` : comment.Username.substring(0,1).toUpperCase()}
+                    </div>
+                    <div class="yorum-main">
+                        <div class="yorum-header">
+                            <a href="/Profile/Index?username=${comment.Username}" style="color:#1d9bf0; font-weight:700; text-decoration:none; margin-right:8px;">${comment.Username}</a>
+                            <span class="yorum-coin">${comment.CoinId}</span>
+                            <span class="yorum-date" title="${new Date(comment.CreatedAt).toLocaleString()}">
+                                ${moment(comment.CreatedAt).fromNow()}
+                            </span>
+                            <span class="yorum-begeni">
+                                <button class="like-btn" data-id="${comment.Id}" style="background:none;border:none;color:#1d9bf0;cursor:pointer;">👍</button>
+                                <span class="like-count">${comment.LikeCount}</span>
+                            </span>
+                        </div>
+                        <div class="yorum-text">${comment.Comment}</div>
+                    </div>
+                `;
+                yorumlarContainer.appendChild(kart);
+            });
+            currentIndex += pageSize;
+            if (currentIndex >= allComments.length) {
+                dahaFazlaBtn.style.display = 'none';
+            }
+        });
+    }
+
+    // Beğeni butonu işlemi (Forum/Index.cshtml ile aynı mantık)
+    document.addEventListener('click', async function (e) {
+        if (e.target.classList.contains('like-btn')) {
+            const button = e.target;
+            const commentId = button.getAttribute('data-id');
+            const likeCountSpan = button.nextElementSibling;
+            let currentCount = parseInt(likeCountSpan.textContent) || 0;
+            try {
+                const response = await fetch(`/Forum/LikeComment/${commentId}`, {
+                    method: 'POST',
+                });
+                if (response.ok) {
+                    likeCountSpan.textContent = currentCount + 1;
+                    button.disabled = true;
+                } else {
+                    const errorText = await response.text();
+                    alert("Beğeni işlemi başarısız oldu: " + errorText);
+                }
+            } catch (err) {
+                alert("Bir hata oluştu: " + err.message);
+            }
+        }
+    });
+</script>
+<!-- moment.js CDN for date formatting -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/tr.min.js"></script>
+<script>moment.locale('tr');</script>
+} 

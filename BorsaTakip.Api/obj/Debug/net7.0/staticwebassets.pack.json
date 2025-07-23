@@ -1,0 +1,29 @@
+{
+  "Files": [
+    {
+      "Id": "/Users/a1-21/Projects/BorsaTakip.Api/BorsaTakip.Api/wwwroot/Uploads/ProfilePhotos/demo1_796b1de0-7404-4c41-9f21-d8cb7aaa5eab.jpeg",
+      "PackagePath": "staticwebassets/Uploads/ProfilePhotos/demo1_796b1de0-7404-4c41-9f21-d8cb7aaa5eab.jpeg"
+    },
+    {
+      "Id": "/Users/a1-21/Projects/BorsaTakip.Api/BorsaTakip.Api/wwwroot/Uploads/ProfilePhotos/demo1_f9779900-3caa-4315-95a8-1fb9165a4a99.jpeg",
+      "PackagePath": "staticwebassets/Uploads/ProfilePhotos/demo1_f9779900-3caa-4315-95a8-1fb9165a4a99.jpeg"
+    },
+    {
+      "Id": "obj/Debug/net7.0/staticwebassets/msbuild.BorsaTakip.Api.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj/Debug/net7.0/staticwebassets/msbuild.build.BorsaTakip.Api.props",
+      "PackagePath": "build\\BorsaTakip.Api.props"
+    },
+    {
+      "Id": "obj/Debug/net7.0/staticwebassets/msbuild.buildMultiTargeting.BorsaTakip.Api.props",
+      "PackagePath": "buildMultiTargeting\\BorsaTakip.Api.props"
+    },
+    {
+      "Id": "obj/Debug/net7.0/staticwebassets/msbuild.buildTransitive.BorsaTakip.Api.props",
+      "PackagePath": "buildTransitive\\BorsaTakip.Api.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

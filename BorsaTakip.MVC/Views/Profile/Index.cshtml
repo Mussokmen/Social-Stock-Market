@@ -1,0 +1,647 @@
+﻿@model BorsaTakip.MVC.Models.UserProfileViewModel
+
+@{
+    ViewData["Title"] = $"{Model.Username} Profil Sayfası";
+    var isOwnProfile = (User.Identity != null && User.Identity.IsAuthenticated && User.Identity.Name == Model.Username);
+}
+
+@section Styles {
+    <style>
+        body, html {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #e3f2fd 0%, #f7fafd 100%) !important;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+        }
+        .profile-wrapper {
+            max-width: 900px;
+            margin: 48px auto;
+            background: #fff;
+            border-radius: 32px;
+            box-shadow: 0 8px 32px rgba(29,155,240,0.13);
+            overflow: hidden;
+            padding: 0 0 32px 0;
+        }
+        .profile-banner {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(90deg, #e3f2fd 60%, #b3e5fc 100%);
+            position: relative;
+        }
+        .profile-avatar {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 7px solid #fff;
+            background: #e3f2fd url('@(Model.PhotoUrl ?? "/images/avatar-placeholder.png")') center/cover no-repeat;
+            position: absolute;
+            bottom: -70px;
+            left: 48px;
+            box-shadow: 0 6px 24px rgba(29,155,240,0.13);
+        }
+        .profile-info {
+            padding: 90px 48px 0 48px;
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+        .profile-main {
+            flex: 1 1 320px;
+            min-width: 280px;
+            max-width: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .profile-main h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #1d9bf0;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 8px #e3eaf7;
+        }
+        .profile-main p.handle {
+            margin: 8px 0 0 0;
+            font-size: 1.18rem;
+            color: #4a6fa5;
+            font-weight: 600;
+        }
+        .profile-follow-boxes {
+            display: flex;
+            gap: 22px;
+            margin: 22px 0 14px 0;
+        }
+        .follow-box {
+            background: linear-gradient(120deg, #e3f2fd 60%, #fffde7 100%);
+            border-radius: 16px;
+            box-shadow: 0 2px 12px #e3eaf7;
+            padding: 16px 28px;
+            text-align: center;
+            min-width: 110px;
+            cursor: pointer;
+            transition: box-shadow 0.2s, transform 0.2s, background 0.2s;
+            border: 2px solid #e3eaf7;
+            position: relative;
+        }
+        .follow-box:hover {
+            box-shadow: 0 8px 32px #b3e5fc;
+            background: linear-gradient(120deg, #b3e5fc 60%, #fffde7 100%);
+            transform: translateY(-2px) scale(1.04);
+        }
+        .follow-box .count {
+            font-size: 1.35em;
+            font-weight: 900;
+            color: #1d9bf0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .follow-box .count.following {
+            color: #ff9800;
+        }
+        .follow-box .label {
+            font-size: 1.01em;
+            color: #4a6fa5;
+            margin-top: 2px;
+            font-weight: 600;
+        }
+        .profile-follow-btn {
+            background: linear-gradient(90deg, #1d9bf0 60%, #81d4fa 100%);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-weight: 800;
+            padding: 12px 32px;
+            margin-left: 22px;
+            font-size: 1.13em;
+            cursor: pointer;
+            box-shadow: 0 2px 8px #e3eaf7;
+            transition: background 0.2s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .profile-follow-btn:hover {
+            background: linear-gradient(90deg, #0d95e8 60%, #1d9bf0 100%);
+            transform: scale(1.05);
+        }
+        .profile-follow-btn.unfollow {
+            background: linear-gradient(90deg, #e67e22 60%, #ffd180 100%);
+        }
+        .profile-follow-btn.unfollow:hover {
+            background: linear-gradient(90deg, #ff9800 60%, #e67e22 100%);
+        }
+        .profile-points {
+            background: linear-gradient(90deg, #e3f2fd 60%, #fffde7 100%);
+            border-radius: 14px;
+            box-shadow: 0 2px 8px #e3eaf7;
+            padding: 16px 22px 10px 22px;
+            margin: 18px 0 10px 0;
+            text-align: center;
+        }
+        .profile-points span {
+            font-size: 1.4em;
+            font-weight: 800;
+            color: #1d9bf0;
+        }
+        .profile-bio {
+            flex: 1 1 320px;
+            min-width: 260px;
+            max-width: 400px;
+            background: #f7fafd;
+            padding: 24px;
+            border-radius: 18px;
+            box-shadow: 0 4px 16px rgba(29,155,240,0.08);
+            height: fit-content;
+        }
+        .profile-bio strong {
+            font-size: 1.13rem;
+            color: #34495e;
+        }
+        .bio-text {
+            margin: 10px 0 15px 0;
+            font-size: 1.08rem;
+            line-height: 1.5;
+            color: #34495e;
+        }
+        .bio-edit-form textarea {
+            width: 100%;
+            min-height: 100px;
+            resize: vertical;
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        .bio-edit-form button, .photo-upload-form button {
+            margin-top: 10px;
+            background-color: #1d9bf0;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .bio-edit-form button:hover, .photo-upload-form button:hover {
+            background-color: #0d95e8;
+        }
+        .photo-upload-form {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .photo-upload-form input[type="file"] {
+            padding: 6px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+        .profile-rozetler {
+            background: linear-gradient(90deg, #fffde7 60%, #e3f2fd 100%);
+            border-radius: 14px;
+            box-shadow: 0 2px 8px #e3eaf7;
+            padding: 18px 22px 10px 22px;
+            margin: 18px 0 10px 0;
+        }
+        .profile-rozetler strong {
+            color: #ff9800;
+            font-size: 1.13em;
+        }
+        .profile-rozetler .rozet-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .profile-rozetler .rozet-item {
+            background: linear-gradient(135deg, #ffe082 0%, #81d4fa 100%);
+            color: #fff;
+            border-radius: 8px;
+            padding: 6px 14px;
+            font-weight: 700;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            box-shadow: 0 2px 8px #e3eaf7;
+        }
+        /* Modal ve Takibi Bırak butonu */
+        #followModal {
+            backdrop-filter: blur(2px);
+        }
+        #followModal ul#followList li {
+            background: #f7fafd;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            padding: 10px 18px;
+            box-shadow: 0 2px 8px #e3eaf7;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            font-size: 1.08em;
+            transition: background 0.2s;
+        }
+        #followModal ul#followList li:hover {
+            background: #e3f2fd;
+        }
+        .unfollow-btn-modal {
+            background: linear-gradient(90deg, #e67e22 60%, #ffd180 100%);
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            padding: 4px 14px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 1em;
+            box-shadow: 0 2px 8px #e3eaf7;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .unfollow-btn-modal:hover {
+            background: linear-gradient(90deg, #ff9800 60%, #e67e22 100%);
+            transform: scale(1.07);
+        }
+        @@media (max-width: 900px) {
+            .profile-wrapper { margin: 20px; border-radius: 15px; }
+            .profile-info { padding: 100px 20px 20px 20px; flex-direction: column; }
+            .profile-avatar { position: static; width: 120px; height: 120px; margin: -70px auto 20px auto; display: block; border-width: 5px; box-shadow: 0 3px 8px rgba(0,0,0,0.12); }
+            .profile-main { max-width: 100%; }
+        }
+    </style>
+}
+
+@functions {
+    string GetBadgeName(string type)
+    {
+        return type switch
+        {
+            "PopulerYorumcu" => "Popüler Yorumcu",
+            "SurekliYorumcu" => "Sürekli Yorumcu",
+            "CevapUstasi" => "Cevap Ustası",
+            "BegeniAvcisi" => "Beğeni Avcısı",
+            "SosyalKelebek" => "Sosyal Kelebek",
+            "EfsaneYorumcu" => "Efsane Yorumcu",
+            "MegaBegeniAvcisi" => "Mega Beğeni Avcısı",
+            "YanitSampiyonu" => "Yanıt Şampiyonu",
+            "ForumEfsanesi" => "Forum Efsanesi",
+            "SuperStar" => "Süper Star",
+            "YilinYorumu" => "Yılın Yorumu",
+            "SurekliAktif" => "Sürekli Aktif",
+            "ToplulukLideri" => "Topluluk Lideri",
+            _ => type
+        };
+    }
+    string GetBadgeIcon(string type)
+    {
+        return type switch
+        {
+            "PopulerYorumcu" => "🔥",
+            "SurekliYorumcu" => "📝",
+            "CevapUstasi" => "💬",
+            "BegeniAvcisi" => "👍",
+            "SosyalKelebek" => "🦋",
+            "EfsaneYorumcu" => "🏆",
+            "MegaBegeniAvcisi" => "💎",
+            "YanitSampiyonu" => "🥇",
+            "ForumEfsanesi" => "🌟",
+            "SuperStar" => "⭐",
+            "YilinYorumu" => "🏅",
+            "SurekliAktif" => "⏰",
+            "ToplulukLideri" => "👑",
+            _ => "🏅"
+        };
+    }
+}
+
+<div class="profile-wrapper">
+    <div class="profile-banner">
+        <div class="profile-avatar"></div>
+    </div>
+
+    <div class="profile-info">
+        <div class="profile-main">
+            <h1>@Model.Username</h1>
+            <p class="handle">@Model.Username</p>
+            <div class="profile-follow-boxes">
+                <div id="followersBox" class="follow-box">
+                    <span id="followersCount" class="count">@Model.FollowersCount</span><br/>
+                    <span class="label">Takipçi</span>
+                </div>
+                <div id="followingBox" class="follow-box">
+                    <span id="followingCount" class="count following">@Model.FollowingCount</span><br/>
+                    <span class="label">Takip Edilen</span>
+                </div>
+            </div>
+            @if (!Model.IsOwnProfile)
+            {
+                <button id="followBtn" class="profile-follow-btn">Takip Et</button>
+            }
+            <div class="profile-points">
+                <span>Puan: @Model.TotalPoints</span>
+            </div>
+            @if (Model.Badges != null && Model.Badges.Count > 0)
+            {
+                <div class="profile-rozetler">
+                    <strong>Kazanılan Rozetler:</strong>
+                    <div class="rozet-list">
+                        @foreach (var badge in Model.Badges)
+                        {
+                            <span class="rozet-item">@GetBadgeIcon(badge.BadgeType) @GetBadgeName(badge.BadgeType)</span>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="profile-bio">
+            <strong>Bio</strong>
+            <p class="bio-text">@(string.IsNullOrWhiteSpace(Model.Bio) ? "Bio bulunmamaktadır." : Model.Bio)</p>
+
+            @if (isOwnProfile)
+            {
+                <form method="post" action="/Profile/UpdateBio" class="bio-edit-form">
+                    <textarea name="Bio" placeholder="Profil biyografinizi buraya yazın...">@Model.Bio</textarea>
+                    <button type="submit">Kaydet</button>
+                </form>
+
+                <form method="post" enctype="multipart/form-data" action="/Profile/UploadPhoto" class="photo-upload-form">
+                    <input type="file" name="photo" accept="image/*" required />
+                    <button type="submit">Fotoğraf Yükle</button>
+                </form>
+            }
+        </div>
+    </div>
+
+    <div class="profile-tabs">
+        <div class="tab active">Yorumlar</div>
+        <div class="tab">Beğeniler</div>
+    </div>
+
+    <div class="profile-comments" style="margin-top:40px;">
+        <h2 style="color:#1d9bf0; font-weight:800; font-size:1.3em; margin-bottom:18px;">Yaptığı Yorumlar</h2>
+        <style>
+            .yorum-kart-modern {
+                display: flex;
+                align-items: flex-start;
+                gap: 18px;
+                background: #fff;
+                border-radius: 16px;
+                box-shadow: 0 4px 18px #e3eaf7;
+                padding: 18px 28px 16px 20px;
+                margin-bottom: 26px;
+                transition: box-shadow 0.3s, transform 0.2s;
+                border: 1.5px solid #e3eaf7;
+            }
+            .yorum-kart-modern:hover {
+                box-shadow: 0 8px 32px #b3e5fc;
+                transform: translateY(-2px) scale(1.01);
+                border-color: #81d4fa;
+            }
+            .yorum-avatar {
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #ffe082 0%, #81d4fa 100%);
+                color: #fff;
+                font-weight: 800;
+                font-size: 1.5em;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                box-shadow: 0 2px 8px #e3eaf7;
+                margin-top: 2px;
+            }
+            .yorum-main {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+            .yorum-header {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 2px;
+            }
+            .yorum-coin {
+                background: linear-gradient(90deg, #ffe082 60%, #fffde7 100%);
+                color: #ff9800;
+                font-weight: 700;
+                font-size: 1.01em;
+                border-radius: 7px;
+                padding: 2px 10px;
+                margin-right: 8px;
+            }
+            .yorum-date {
+                color: #4a6fa5;
+                font-size: 0.98em;
+                font-weight: 500;
+            }
+            .yorum-begeni {
+                margin-left: auto;
+                color: #1d9bf0;
+                font-weight: 700;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                font-size: 1.08em;
+            }
+            .yorum-text {
+                font-size: 1.13em;
+                color: #34495e;
+                margin-left: 2px;
+                margin-top: 2px;
+            }
+        </style>
+        @if (Model.Comments?.Any() == true)
+        {
+            foreach (var comment in Model.Comments)
+            {
+                <div class="yorum-kart-modern">
+                    <div class="yorum-avatar">@comment.Username.Substring(0,1).ToUpper()</div>
+                    <div class="yorum-main">
+                        <div class="yorum-header">
+                            <a href="/Profile/Index?username=@comment.Username" style="color:#1d9bf0; font-weight:700; text-decoration:none; margin-right:8px;">@comment.Username</a>
+                            <span class="yorum-coin">@comment.CoinId</span>
+                            <span class="yorum-date">@comment.CreatedAt.ToString("dd MMM yyyy HH:mm")</span>
+                            <span class="yorum-begeni"><span>👍</span>@comment.LikeCount</span>
+                        </div>
+                        <div class="yorum-text">@comment.Comment</div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div style="color:#5677cc; font-style:italic; padding: 20px 0;">Henüz yorum yok.</div>
+        }
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="followModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.18); z-index:9999; align-items:center; justify-content:center;">
+    <div style="background:#fff; border-radius:16px; box-shadow:0 8px 32px #e3eaf7; padding:32px 32px 24px 32px; min-width:320px; max-width:90vw; max-height:80vh; overflow-y:auto; position:relative;">
+        <button id="closeModalBtn" style="position:absolute; top:12px; right:18px; background:none; border:none; font-size:1.5em; color:#1d9bf0; cursor:pointer;">&times;</button>
+        <h3 id="modalTitle" style="color:#1d9bf0; font-weight:800; margin-bottom:18px; text-align:center;"></h3>
+        <ul id="followList" style="list-style:none; padding:0; margin:0;"></ul>
+    </div>
+</div>
+<script>
+    const currentUsername = '@User.Identity.Name';
+    const profileUsername = '@Model.Username';
+document.addEventListener('DOMContentLoaded', function() {
+    // Takipçi/Takip edilen kutularına tıklama
+    const followersBox = document.getElementById('followersBox');
+    const followingBox = document.getElementById('followingBox');
+    const modal = document.getElementById('followModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const followList = document.getElementById('followList');
+    const modalTitle = document.getElementById('modalTitle');
+    followersBox.addEventListener('click', function() {
+        modal.style.display = 'flex';
+        modalTitle.textContent = 'Takipçiler';
+        followList.innerHTML = '<li style="color:#4a6fa5;">Yükleniyor...</li>';
+        fetch(`https://localhost:7095/api/UserProfile/followers/${profileUsername}`).then(r=>r.json()).then(data=>{
+            followList.innerHTML = '';
+            const users = data.Users || data.users;
+            if(users && users.length > 0) {
+                users.forEach(u => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<a href='/Profile/Index?username=${encodeURIComponent(u)}' style='color:#1d9bf0; font-weight:700; text-decoration:none; font-size:1.08em;'>${u}</a>`;
+                    followList.appendChild(li);
+                });
+            } else {
+                followList.innerHTML = '<li style="color:#4a6fa5;">Takipçi yok.</li>';
+            }
+        });
+    });
+    followingBox.addEventListener('click', function() {
+        modal.style.display = 'flex';
+        modalTitle.textContent = 'Takip Edilenler';
+        followList.innerHTML = '<li style="color:#4a6fa5;">Yükleniyor...</li>';
+        fetch(`https://localhost:7095/api/UserProfile/following/${profileUsername}`).then(r=>r.json()).then(data=>{
+            followList.innerHTML = '';
+            const users = data.Users || data.users;
+            if(users && users.length > 0) {
+                users.forEach(u => {
+                    const li = document.createElement('li');
+                    li.style.display = 'flex';
+                    li.style.alignItems = 'center';
+                    li.style.justifyContent = 'space-between';
+                    li.style.gap = '10px';
+                    li.innerHTML = `<a href='/Profile/Index?username=${encodeURIComponent(u)}' style='color:#ff9800; font-weight:700; text-decoration:none; font-size:1.08em;'>${u}</a>`;
+                    // Sadece kendi profilindeyken takibi bırak butonu göster
+                    if(currentUsername && profileUsername && currentUsername.toLowerCase() === profileUsername.toLowerCase()) {
+                        const unfollowBtn = document.createElement('button');
+                        unfollowBtn.textContent = 'Takibi Bırak';
+                        unfollowBtn.className = 'unfollow-btn-modal';
+                        const icon = document.createElement('span');
+                        icon.innerHTML = '➖';
+                        unfollowBtn.prepend(icon);
+                        unfollowBtn.onclick = function() {
+                            fetch('https://localhost:7095/api/UserProfile/unfollow', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ followerUsername: currentUsername, followedUsername: u })
+                            }).then(async r=>{
+                                const text = await r.text();
+                                console.log('Takibi bırak yanıtı:', r.status, text);
+                                if(r.ok) {
+                                    li.remove();
+                                    updateFollowCounts();
+                                }
+                            });
+                        };
+                        li.appendChild(unfollowBtn);
+                    }
+                    followList.appendChild(li);
+                });
+            } else {
+                followList.innerHTML = '<li style="color:#4a6fa5;">Takip edilen yok.</li>';
+            }
+        });
+    });
+    closeModalBtn.addEventListener('click', function() { modal.style.display = 'none'; });
+    modal.addEventListener('click', function(e) { if(e.target === modal) modal.style.display = 'none'; });
+
+    // Takip Et / Takibi Bırak butonu
+    const btn = document.getElementById('followBtn');
+    if(btn) {
+        let isFollowing = false;
+        fetch(`https://localhost:7095/api/UserProfile/followers/${profileUsername}`).then(r=>r.json()).then(data=>{
+            if(data && data.Users && data.Users.includes(currentUsername)) {
+                btn.textContent = 'Takibi Bırak';
+                btn.style.background = '#e67e22';
+                isFollowing = true;
+            }
+        });
+        btn.addEventListener('click', function() {
+            const followerUsername = currentUsername ? currentUsername.toLowerCase() : '';
+            const followedUsername = profileUsername ? profileUsername.toLowerCase() : '';
+            console.log('Follow request:', { followerUsername, followedUsername });
+            if(!isFollowing) {
+                fetch('https://localhost:7095/api/UserProfile/follow', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ followerUsername, followedUsername })
+                }).then(async r=>{
+                    const text = await r.text();
+                    console.log('API yanıtı:', r.status, text);
+                    if(r.ok) {
+                        btn.textContent = 'Takibi Bırak'; btn.style.background = '#e67e22'; isFollowing = true;
+                        // Takipçi ve takip edilen sayılarını güncelle
+                        updateFollowCounts();
+                    }
+                });
+            } else {
+                fetch('https://localhost:7095/api/UserProfile/unfollow', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ followerUsername, followedUsername })
+                }).then(async r=>{
+                    const text = await r.text();
+                    console.log('API yanıtı:', r.status, text);
+                    if(r.ok) {
+                        btn.textContent = 'Takip Et'; btn.style.background = '#1d9bf0'; isFollowing = false;
+                        // Takipçi ve takip edilen sayılarını güncelle
+                        updateFollowCounts();
+                    }
+                });
+            }
+        });
+    }
+});
+
+function updateFollowCounts() {
+    // Takipçi sayısı
+    fetch(`https://localhost:7095/api/UserProfile/followers/${profileUsername}`)
+        .then(r=>r.json())
+        .then(data=>{
+            const followersCount = document.getElementById('followersCount');
+            if(followersCount && data.Count !== undefined) {
+                followersCount.textContent = data.Count;
+            }
+        });
+    // Takip edilen sayısı
+    fetch(`https://localhost:7095/api/UserProfile/following/${profileUsername}`)
+        .then(r=>r.json())
+        .then(data=>{
+            const followingCount = document.getElementById('followingCount');
+            if(followingCount && data.Count !== undefined) {
+                followingCount.textContent = data.Count;
+            }
+        });
+}
+</script>

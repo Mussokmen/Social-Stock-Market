@@ -8,7 +8,8 @@ namespace BorsaTakip.MVC.Models
     {
         public JsonElement CoinDetails { get; set; }
         public List<CoinPricePoint> PriceHistory { get; set; }
+        public List<CoinCommentViewModel> Comments { get; set; } = new List<CoinCommentViewModel>();
     }
 
-   
+
 }

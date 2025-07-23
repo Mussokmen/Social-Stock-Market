@@ -37,6 +37,20 @@
 
 <div class="login-container">
     <form asp-action="Register" method="post" class="login-form">
+
+        @* ModelState hatalarını gösteriyoruz *@
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger mb-3">
+                <ul>
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                </ul>
+            </div>
+        }
+
         <h3 class="mb-4 text-center">Borsa Takip - Kayıt Ol</h3>
 
         <div class="mb-3">
@@ -72,3 +86,7 @@
         <button type="submit" class="btn btn-primary w-100">Kayıt Ol</button>
     </form>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

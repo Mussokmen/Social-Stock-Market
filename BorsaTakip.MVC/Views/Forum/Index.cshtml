@@ -8,10 +8,17 @@
     var isAuthenticated = HttpContextAccessor.HttpContext.User.Identity?.IsAuthenticated ?? false;
 }
 
+<div style="display:flex; justify-content:flex-end; align-items:center; margin-bottom:24px;">
+    <a href="/Forum/FollowingComments" class="btn btn-lg" style="background:linear-gradient(90deg,#1d9bf0 60%,#81d4fa 100%); color:#fff; font-weight:800; border-radius:12px; box-shadow:0 2px 8px #e3eaf7; padding:12px 28px; font-size:1.13em; transition:background 0.2s,transform 0.2s;">
+        <span style="font-size:1.25em; margin-right:8px;">👥</span> Takip Ettiklerimin Yorumları
+    </a>
+</div>
+
 <h2 class="mb-4 text-white">Forum - Tüm Yorumlar</h2>
 
 @section Styles {
     <style>
+        /* ... mevcut css ... */
         body {
             background: url('/images/forum1.png') no-repeat center center fixed;
             background-size: cover;
@@ -106,6 +113,39 @@
         .btn-reply {
             margin-top: 12px;
         }
+
+        /* Beğeni butonu ve sayacı */
+        .comment-like {
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .like-btn {
+            background-color: #1DA1F2;
+            border: none;
+            color: white;
+            font-weight: 700;
+            border-radius: 6px;
+            padding: 6px 12px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+            .like-btn:hover {
+                background-color: #0d95e8;
+            }
+
+        .like-count {
+            font-weight: 600;
+            color: #0d1117;
+        }
+
+        .like-btn:disabled {
+            background-color: #8cb9e7;
+            cursor: not-allowed;
+        }
     </style>
 }
 
@@ -150,27 +190,47 @@
     </div>
 
     <div class="col-md-7">
-        @foreach (var comment in Model)
+        @foreach (var comment in Model.OrderByDescending(c => c.CreatedAt))
         {
-            <div class="comment-card">
+            <div class="comment-card" data-comment-id="@comment.Id">
                 <div class="comment-header">
                     <div class="avatar">@comment.Username.Substring(0, 1)</div>
-                    <div class="username">@comment.Username</div>
+                    <div class="username">
+                        <a href="/Profile/Index?username=@comment.Username" style="color:#0d1117; text-decoration:none; font-weight:700;">@comment.Username</a>
+                    </div>
                     <div class="comment-date">@comment.CreatedAt.ToString("dd MMM yyyy HH:mm")</div>
                 </div>
                 <div class="coin-badge">Coin: @comment.CoinId</div>
                 <div class="comment-text">@comment.Comment</div>
 
-                <a asp-controller="Forum" asp-action="CommentDetails" asp-route-id="@comment.Id" class="btn btn-primary btn-sm btn-reply">
-                    Yanıtla
-                </a>
+                <div class="comment-like">
+                    <button class="like-btn" @(isAuthenticated ? "" : "disabled")>
+                        👍 Beğen
+                    </button>
+                    <span class="like-count">@comment.LikeCount</span>
+                </div>
+
+                <div class="replies-section mt-3" id="replies-@comment.Id">
+                    <!-- Yanıtlar AJAX ile yüklenecek -->
+                </div>
+                @if (isAuthenticated)
+                {
+                    <button class="btn btn-sm btn-reply btn-outline-primary mt-2" type="button" onclick="toggleReplyForm(@comment.Id)">Yanıtla</button>
+                    <form class="reply-form mt-2" id="reply-form-@comment.Id" style="display:none;" onsubmit="return submitReply(event, @comment.Id)">
+                        <textarea class="form-control mb-2" name="replyComment" rows="2" placeholder="Yanıtınızı yazın..." required></textarea>
+                        <button type="submit" class="btn btn-success btn-sm">Gönder</button>
+                    </form>
+                }
             </div>
         }
     </div>
 </div>
 
-@section Scripts {
-    <script>const popularCoins = [
+@section Scripts
+{
+    <script>
+        const jwtToken = '@ViewBag.JWToken';
+        const popularCoins = [
             { id: "bitcoin", name: "Bitcoin" },
             { id: "ethereum", name: "Ethereum" },
             { id: "tether", name: "Tether" },
@@ -241,5 +301,75 @@
                     coinInput.focus();
                 }
             });
-        }</script>
+        }
+
+        // Beğeni butonu tıklama işlemi
+        document.querySelectorAll('.like-btn').forEach(button => {
+            button.addEventListener('click', async (e) => {
+                const commentCard = e.target.closest('.comment-card');
+                const commentId = commentCard.dataset.commentId;
+                const likeCountSpan = commentCard.querySelector('.like-count');
+                let currentCount = parseInt(likeCountSpan.textContent) || 0;
+
+                try {
+                    const response = await fetch(`/Forum/LikeComment/${commentId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                        }
+                    });
+                    if (response.ok) {
+                        likeCountSpan.textContent = currentCount + 1;
+                        button.disabled = true;
+                    } else {
+                        alert("Beğeni işlemi başarısız oldu.");
+                    }
+                } catch (err) {
+                    alert("Bir hata oluştu: " + err.message);
+                }
+            });
+        });
+
+        // Yanıt formunu aç/kapat
+        window.toggleReplyForm = function (commentId) {
+            const form = document.getElementById(`reply-form-${commentId}`);
+            if (form) {
+                form.style.display = form.style.display === 'none' ? 'block' : 'none';
+            }
+        };
+
+        // Yanıt gönderme işlemi
+        window.submitReply = async function (event, commentId) {
+            event.preventDefault();
+            const form = document.getElementById(`reply-form-${commentId}`);
+            const textarea = form.querySelector('textarea[name="replyComment"]');
+            const replyText = textarea.value.trim();
+            if (!replyText) return false;
+
+            try {
+                const response = await fetch(`/CommentReplies/AddReply`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                    },
+                    body: JSON.stringify({
+                        CommentId: commentId,
+                        ReplyText: replyText
+                    })
+                });
+                if (response.ok) {
+                    textarea.value = '';
+                    form.style.display = 'none';
+                    alert("Yanıtınız gönderildi!");
+                } else {
+                    alert("Yanıt gönderilemedi.");
+                }
+            } catch (err) {
+                alert("Bir hata oluştu: " + err.message);
+            }
+            return false;
+        };
+    </script>
 }

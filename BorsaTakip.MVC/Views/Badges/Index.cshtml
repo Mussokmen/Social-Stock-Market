@@ -1,0 +1,236 @@
+@model BorsaTakip.MVC.Models.BadgePointsViewModel
+@{
+    ViewData["Title"] = "Rozetler";
+}
+
+@section Styles {
+    <style>
+        body, html {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f7fafd 0%, #e3eaf7 100%) !important;
+            margin: 0;
+            padding: 0;
+        }
+        .badge-list {
+            max-width: 1200px;
+            margin: 48px auto 0 auto;
+            background: none;
+            box-shadow: none;
+            padding: 0;
+            display: flex;
+            flex-direction: row;
+            gap: 32px;
+        }
+        .badge-item {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 32px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #e3eaf7;
+            background: linear-gradient(90deg, #f7fafd 80%, #e3eaf7 100%);
+            border-radius: 16px;
+            box-shadow: 0 4px 18px rgba(29,155,240,0.08);
+            transition: box-shadow 0.3s, transform 0.2s;
+        }
+        .badge-item:hover {
+            box-shadow: 0 8px 32px rgba(29,155,240,0.18);
+            transform: translateY(-2px) scale(1.02);
+            background: linear-gradient(90deg, #e0f7fa 60%, #e3eaf7 100%);
+        }
+        .badge-icon {
+            font-size: 2.3em;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffe082 0%, #81d4fa 100%);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(29,155,240,0.12);
+            border: 3px solid #fffbe6;
+        }
+        .badge-info {
+            flex: 1;
+        }
+        .badge-title {
+            font-size: 1.18em;
+            font-weight: 800;
+            color: #1d9bf0;
+        }
+        .badge-desc {
+            color: #34495e;
+            font-size: 1.05em;
+            margin-bottom: 8px;
+        }
+        .badge-progress {
+            margin-top: 6px;
+            margin-bottom: 2px;
+            font-size: 0.98em;
+            color: #4a6fa5;
+        }
+        .progress-bar {
+            height: 12px;
+            border-radius: 6px;
+            background: #e3eaf7;
+            overflow: hidden;
+            margin-bottom: 4px;
+        }
+        .progress-bar-inner {
+            height: 100%;
+            background: linear-gradient(90deg, #1d9bf0 60%, #ffe082 100%);
+            border-radius: 6px;
+            transition: width 0.5s;
+        }
+        .badge-earned {
+            color: #2ecc71;
+            font-weight: 700;
+            margin-left: 12px;
+        }
+        .badge-not-earned {
+            color: #e67e22;
+            font-weight: 600;
+            margin-left: 12px;
+        }
+        .leaderboard-box {
+            flex: 1;
+            min-width: 220px;
+            max-width: 320px;
+            background: linear-gradient(135deg, #fffbe6 0%, #e3f2fd 100%);
+            border-radius: 18px;
+            box-shadow: 0 4px 18px #e3eaf7;
+            padding: 28px 18px 18px 18px;
+            height: fit-content;
+            align-self: flex-start;
+        }
+        .leaderboard-title {
+            text-align: center;
+            color: #ff9800;
+            font-weight: 900;
+            margin-bottom: 22px;
+            letter-spacing: 1.5px;
+            font-size: 1.25em;
+        }
+        .leaderboard-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .leaderboard-entry {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e3eaf7;
+            font-size: 1.13em;
+            font-weight: 700;
+            border-radius: 8px;
+            margin-bottom: 2px;
+            background: none;
+        }
+        .leaderboard-entry.top1 {
+            background: linear-gradient(90deg, #fffde7 60%, #ffe082 100%);
+            color: #ff9800;
+        }
+        .leaderboard-entry.top2 {
+            background: linear-gradient(90deg, #e3f2fd 60%, #b3e5fc 100%);
+            color: #039be5;
+        }
+        .leaderboard-entry.top3 {
+            background: linear-gradient(90deg, #f3e5f5 60%, #ce93d8 100%);
+            color: #8e24aa;
+        }
+        .leaderboard-rank {
+            font-size: 1.2em;
+            font-weight: 900;
+            margin-right: 10px;
+        }
+        .leaderboard-username {
+            font-weight: 700;
+            color: #223355;
+        }
+        .leaderboard-points {
+            color: #1d9bf0;
+            font-weight: 900;
+        }
+        @@ media (max-width: 900px) {
+            .badge-list { flex-direction: column; gap: 0; }
+            .leaderboard-box { margin-top: 32px; max-width: 100%; }
+        }
+    </style>
+}
+
+<div class="badge-list">
+    <div style="flex:2; min-width:0;">
+        <div style="background:linear-gradient(90deg,#e3eaf7 60%,#f7fafd 100%); border-radius:18px; box-shadow:0 4px 18px #e3eaf7; padding:22px 32px 18px 32px; margin-bottom:18px; text-align:center;">
+            <span style="font-size:2.3em; font-weight:900; color:#1d9bf0; letter-spacing:1.5px; text-shadow:0 2px 8px #e3eaf7;">Toplam Puan: @Model.TotalPoints</span>
+        </div>
+        <div style="background:#f0f6ff; border-radius:14px; box-shadow:0 1px 8px #e3eaf7; padding:16px 22px 12px 22px; margin-bottom:32px; text-align:center; font-size:1.13em; color:#4a6fa5;">
+            <span style="margin-right:18px;">Yorum Puanı: <b>@Model.YorumPuan</b></span>
+            <span style="margin-right:18px;">Beğeni Puanı: <b>@Model.BegeniPuan</b></span>
+            <span style="margin-right:18px;">Yanıt Puanı: <b>@Model.YanitPuan</b></span>
+            <span style="margin-right:18px;">Rozet Puanı: <b>@Model.RozetPuan</b></span>
+            <span>Günlük Bonus: <b>@Model.GunlukBonus</b></span>
+        </div>
+        <h2 style="text-align:center; color:#1d9bf0; margin-bottom:32px; letter-spacing:1.5px; font-weight:900;">Rozetlerim</h2>
+        @foreach (var badge in Model.Badges)
+        {
+            <div class="badge-item">
+                <div class="badge-icon">@GetBadgeIcon(badge.BadgeType)</div>
+                <div class="badge-info">
+                    <div class="badge-title">@badge.BadgeName
+                        @if (badge.Earned)
+                        {
+                            <span class="badge-earned">✔ Kazanıldı</span>
+                        }
+                        else
+                        {
+                            <span class="badge-not-earned">@badge.Remaining adet kaldı</span>
+                        }
+                    </div>
+                    <div class="badge-desc">@badge.Description</div>
+                    <div class="badge-progress">İlerleme: @badge.CurrentValue / @badge.TargetValue</div>
+                    <div class="progress-bar">
+                        <div class="progress-bar-inner" style="width:@(Math.Min(100, badge.TargetValue == 0 ? 0 : badge.CurrentValue * 100 / badge.TargetValue))%"></div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="leaderboard-box">
+        <h3 class="leaderboard-title">En Yüksek Puanlı 20 Kullanıcı</h3>
+        <ol class="leaderboard-list">
+            @for (int i = 0; i < Model.Leaderboard.Count; i++)
+            {
+                var entry = Model.Leaderboard[i];
+                var rankClass = i == 0 ? "top1" : i == 1 ? "top2" : i == 2 ? "top3" : "";
+                <li class="leaderboard-entry @rankClass">
+                    <span class="leaderboard-rank">
+                        @if (i == 0) { <span>🥇</span> }
+                        else if (i == 1) { <span>🥈</span> }
+                        else if (i == 2) { <span>🥉</span> }
+                        else { <span>@(i+1).</span> }
+                    </span>
+                    <a href="/Profile/Index?username=@entry.Username" class="leaderboard-username" style="color:#1d9bf0; font-weight:700; text-decoration:none;">@entry.Username</a>
+                    <span class="leaderboard-points">@entry.TotalPoints</span>
+                </li>
+            }
+        </ol>
+    </div>
+</div>
+
+@functions {
+    string GetBadgeIcon(string type)
+    {
+        return type switch
+        {
+            "PopulerYorumcu" => "🔥",
+            "SurekliYorumcu" => "📝",
+            "CevapUstasi" => "💬",
+            "BegeniAvcisi" => "👍",
+            "SosyalKelebek" => "🦋",
+            _ => "🏅"
+        };
+    }
+ } 

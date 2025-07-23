@@ -13,6 +13,7 @@ namespace BorsaTakip.Api.Models
         public string Comment { get; set; }
         public DateTime CreatedAt { get; set; }
 
+        // Navigation property, required olmamalı
         public CoinComment CoinComment { get; set; }
     }
 

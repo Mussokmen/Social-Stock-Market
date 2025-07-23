@@ -109,6 +109,7 @@ namespace BorsaTakip.MVC.Controllers
             {
                 CoinDetails = coinDetails,
                 PriceHistory = priceList
+
             };
 
             return View(model);

@@ -75,4 +75,6 @@
 /Users/a1-21/Projects/BorsaTakip.Api/BorsaTakip.Api/obj/Debug/net7.0/BorsaTakip.Api.pdb
 /Users/a1-21/Projects/BorsaTakip.Api/BorsaTakip.Api/obj/Debug/net7.0/BorsaTakip.Api.genruntimeconfig.cache
 /Users/a1-21/Projects/BorsaTakip.Api/BorsaTakip.Api/obj/Debug/net7.0/ref/BorsaTakip.Api.dll
+/Users/a1-21/Projects/BorsaTakip.Api/BorsaTakip.Api/bin/Debug/net7.0/BorsaTakip.Api.staticwebassets.runtime.json
+/Users/a1-21/Projects/BorsaTakip.Api/BorsaTakip.Api/bin/Debug/net7.0/Newtonsoft.Json.dll
 /Users/a1-21/Projects/BorsaTakip.Api/BorsaTakip.Api/obj/Debug/net7.0/BorsaTakip.Api.csproj.CopyComplete

@@ -24,6 +24,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWNjb3VudC9SZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[/Users/a1-21/Projects/BorsaTakip.Api/BorsaTakip.MVC/Views/Badges/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmFkZ2VzL0luZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/a1-21/Projects/BorsaTakip.Api/BorsaTakip.MVC/Views/Chat/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2hhdC9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [/Users/a1-21/Projects/BorsaTakip.Api/BorsaTakip.MVC/Views/Coin/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ29pbi9EZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -40,6 +48,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRm9ydW0vQ29tbWVudERldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[/Users/a1-21/Projects/BorsaTakip.Api/BorsaTakip.MVC/Views/Forum/FollowingComments.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRm9ydW0vRm9sbG93aW5nQ29tbWVudHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [/Users/a1-21/Projects/BorsaTakip.Api/BorsaTakip.MVC/Views/Forum/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRm9ydW0vSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -50,6 +62,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [/Users/a1-21/Projects/BorsaTakip.Api/BorsaTakip.MVC/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9Qcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/a1-21/Projects/BorsaTakip.Api/BorsaTakip.MVC/Views/Portfolio/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUG9ydGZvbGlvL0luZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/a1-21/Projects/BorsaTakip.Api/BorsaTakip.MVC/Views/Profile/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvZmlsZS9JbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/a1-21/Projects/BorsaTakip.Api/BorsaTakip.MVC/Views/Shared/Error.cshtml]

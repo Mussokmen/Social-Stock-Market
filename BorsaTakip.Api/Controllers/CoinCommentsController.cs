@@ -19,22 +19,35 @@ namespace BorsaTakip.Api.Controllers
         {
             _context = context;
         }
-
-        // Yorum ekleme
         [HttpPost]
         public async Task<IActionResult> AddComment([FromBody] CoinComment comment)
         {
-            if (string.IsNullOrEmpty(comment.CoinId) || string.IsNullOrEmpty(comment.Username) || string.IsNullOrEmpty(comment.Comment))
+            if (comment == null)
+                return BadRequest("Yorum verisi boş olamaz.");
+
+            if (string.IsNullOrWhiteSpace(comment.CoinId) ||
+                string.IsNullOrWhiteSpace(comment.Username) ||
+                string.IsNullOrWhiteSpace(comment.Comment))
             {
-                return BadRequest("Eksik bilgi.");
+                return BadRequest("CoinId, Username ve Comment alanları zorunludur.");
             }
 
             comment.CreatedAt = DateTime.UtcNow;
+            
+           
 
             _context.CoinComments.Add(comment);
             await _context.SaveChangesAsync();
 
-            return Ok(comment);
+            return Ok(new
+            {
+                comment.Id,
+                comment.Username,
+                comment.CoinId,
+                comment.Comment,
+                comment.CreatedAt,
+               
+            });
         }
 
         // Belirli coin yorumlarını listele
@@ -111,5 +124,59 @@ namespace BorsaTakip.Api.Controllers
 
             return Ok(comments);
         }
+
+        // Kullanıcının yaptığı yorumları getir
+        [HttpGet("usercomments/{username}")]
+        public async Task<IActionResult> GetUserComments(string username)
+        {
+            if (string.IsNullOrEmpty(username))
+                return BadRequest("Kullanıcı adı gerekli.");
+
+            var comments = await _context.CoinComments
+                .Where(c => c.Username == username)
+                .OrderByDescending(c => c.CreatedAt)
+                .ToListAsync();
+
+            return Ok(comments);
+        }
+        [HttpPost("{commentId}/like")]
+        public async Task<IActionResult> LikeComment(int commentId, [FromQuery] string username)
+        {
+            if (string.IsNullOrEmpty(username))
+                return BadRequest("Kullanıcı adı gerekli.");
+
+            // UserId'yi username'den bul
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == username);
+            if (user == null)
+                return Unauthorized("Kullanıcı bulunamadı.");
+            var userId = user.Id;
+
+            var comment = await _context.CoinComments.FindAsync(commentId);
+            if (comment == null)
+                return NotFound();
+
+            var alreadyLiked = await _context.CommentLikes.AnyAsync(cl => cl.CommentId == commentId && cl.UserId == userId);
+            if (alreadyLiked)
+                return BadRequest("Zaten beğendiniz.");
+
+            var like = new CommentLike
+            {
+                CommentId = commentId,
+                UserId = userId,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.CommentLikes.Add(like);
+            comment.LikeCount++;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { Likes = comment.LikeCount });
+        }
+
+
+
+
+
+
     }
 }

@@ -1,11 +1,54 @@
 {
   "Version": 1,
-  "Hash": "H74Pq6crGipOZRgWK+lJ8KOndQwSJvTfYlIsyE8tWD4=",
+  "Hash": "lRxABjIkAqS+IdE9g/iH+Q8GH1RutES9LuKPzR/BGWo=",
   "Source": "BorsaTakip.Api",
   "BasePath": "_content/BorsaTakip.Api",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "BorsaTakip.Api/wwwroot",
+      "Source": "BorsaTakip.Api",
+      "ContentRoot": "/Users/a1-21/Projects/BorsaTakip.Api/BorsaTakip.Api/wwwroot/",
+      "BasePath": "_content/BorsaTakip.Api",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "/Users/a1-21/Projects/BorsaTakip.Api/BorsaTakip.Api/wwwroot/Uploads/ProfilePhotos/demo1_796b1de0-7404-4c41-9f21-d8cb7aaa5eab.jpeg",
+      "SourceId": "BorsaTakip.Api",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/a1-21/Projects/BorsaTakip.Api/BorsaTakip.Api/wwwroot/",
+      "BasePath": "_content/BorsaTakip.Api",
+      "RelativePath": "Uploads/ProfilePhotos/demo1_796b1de0-7404-4c41-9f21-d8cb7aaa5eab.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/Uploads/ProfilePhotos/demo1_796b1de0-7404-4c41-9f21-d8cb7aaa5eab.jpeg"
+    },
+    {
+      "Identity": "/Users/a1-21/Projects/BorsaTakip.Api/BorsaTakip.Api/wwwroot/Uploads/ProfilePhotos/demo1_f9779900-3caa-4315-95a8-1fb9165a4a99.jpeg",
+      "SourceId": "BorsaTakip.Api",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/a1-21/Projects/BorsaTakip.Api/BorsaTakip.Api/wwwroot/",
+      "BasePath": "_content/BorsaTakip.Api",
+      "RelativePath": "Uploads/ProfilePhotos/demo1_f9779900-3caa-4315-95a8-1fb9165a4a99.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/Uploads/ProfilePhotos/demo1_f9779900-3caa-4315-95a8-1fb9165a4a99.jpeg"
+    }
+  ]
 }

@@ -27,6 +27,13 @@ namespace BorsaTakip.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddReply([FromBody] CommentReply reply)
         {
+            ModelState.Remove("CoinComment");
+            ModelState.Remove("CoinComment.Id");
+            ModelState.Remove("CoinComment.CoinId");
+            ModelState.Remove("CoinComment.Username");
+            ModelState.Remove("CoinComment.Comment");
+            ModelState.Remove("CoinComment.CreatedAt");
+
             if (string.IsNullOrEmpty(reply.Comment) || string.IsNullOrEmpty(reply.Username) || reply.CoinCommentId <= 0)
             {
                 return BadRequest("Eksik bilgi.");
@@ -46,6 +53,21 @@ namespace BorsaTakip.Api.Controllers
         {
             var replies = await _context.CommentReplies
                 .Where(r => r.CoinCommentId == coinCommentId)
+                .OrderByDescending(r => r.CreatedAt)
+                .ToListAsync();
+
+            return Ok(replies);
+        }
+
+        // Kullanıcının yazdığı yanıtları getir
+        [HttpGet("byuser/{username}")]
+        public async Task<IActionResult> GetRepliesByUser(string username)
+        {
+            if (string.IsNullOrWhiteSpace(username))
+                return BadRequest("Kullanıcı adı gerekli.");
+
+            var replies = await _context.CommentReplies
+                .Where(r => r.Username == username)
                 .OrderByDescending(r => r.CreatedAt)
                 .ToListAsync();
 

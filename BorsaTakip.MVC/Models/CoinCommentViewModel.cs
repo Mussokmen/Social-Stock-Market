@@ -10,6 +10,9 @@ namespace BorsaTakip.MVC.Models
         public string CoinId { get; set; }
         public string Comment { get; set; }
         public DateTime CreatedAt { get; set; }
+        public int LikeCount { get; set; }
+        public string PhotoUrl { get; set; }
+
 
         public int? ParentCommentId { get; set; }
         public List<CoinCommentViewModel> Replies { get; set; } = new List<CoinCommentViewModel>();

@@ -1,0 +1,190 @@
+@model BorsaTakip.MVC.Models.PortfolioPageViewModel
+@{
+    ViewData["Title"] = "Portföyüm";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+
+<style>
+    body {
+        background: linear-gradient(120deg, #eaf6ff 0%, #f7fbff 60%, #cbeafe 100%);
+        min-height: 100vh;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+    }
+    .modern-table {
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 4px 24px 0 rgba(29,155,240,0.08), 0 1.5px 4px 0 rgba(29,155,240,0.10);
+        background: #fff;
+    }
+    .modern-table th {
+        background: #e3f2fd;
+        color: #1d9bf0;
+        font-weight: 600;
+        font-size: 1.08rem;
+        border-bottom: 2px solid #b6e0fe;
+    }
+    .modern-table td {
+        vertical-align: middle;
+        font-size: 1.05rem;
+    }
+    .modern-table tr {
+        transition: background 0.15s;
+    }
+    .modern-table tbody tr:hover {
+        background: #f1f8ff;
+    }
+    .modern-table tbody tr:nth-child(even) {
+        background: #f7fbff;
+    }
+    .modern-table .delete-btn {
+        border-radius: 50px;
+        padding: 0.3rem 1.1rem;
+        font-size: 1rem;
+    }
+    @@media (max-width: 768px) {
+        .modern-table { font-size: 0.95rem; }
+    }
+</style>
+
+<div class="container py-4">
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h3 class="card-title mb-4 text-primary"><i class="bi bi-wallet2 me-2"></i>Portföyüm</h3>
+                    @if (Model.TotalCurrentValue.HasValue && Model.TotalCurrentValue > 0)
+                    {
+                        <div class="alert alert-info mb-4" style="font-size:1.15rem; font-weight:500;">
+                            <i class="bi bi-cash-coin me-2"></i>Toplam Portföy Güncel Değeri: <span class="text-success">@Model.TotalCurrentValue.Value.ToString("N2") USD</span>
+                        </div>
+                    }
+                    @if (Model.Holdings != null && Model.Holdings.Count > 0)
+                    {
+                        <div class="table-responsive">
+                            <table class="table modern-table align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th><i class="bi bi-currency-bitcoin"></i> Coin Adı</th>
+                                        <th>Adet</th>
+                                        <th>Alış Fiyatı</th>
+                                        <th>Alış Tarihi</th>
+                                        <th>Güncel Fiyat (USD)</th>
+                                        <th>Güncel Değer (USD)</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var item in Model.Holdings)
+                                {
+                                    <tr>
+                                        <td class="fw-semibold">@item.CoinName</td>
+                                        <td>@item.Quantity</td>
+                                        <td>@item.PurchasePrice ₺</td>
+                                        <td>@item.BuyDate.ToString("yyyy-MM-dd HH:mm")</td>
+                                        <td>@(item.CurrentPrice.HasValue ? item.CurrentPrice.Value.ToString("N4") : "-")</td>
+                                        <td>@(item.CurrentTotalValue.HasValue ? item.CurrentTotalValue.Value.ToString("N2") : "-")</td>
+                                        <td>
+                                            <form asp-action="Delete" method="post" class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@item.Id" />
+                                                <button type="submit" class="btn btn-outline-danger btn-sm delete-btn" title="Sil" onclick="return confirm('Bu coini silmek istediğinize emin misiniz?');">
+                                                    <i class="bi bi-trash"></i> Sil
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="d-flex flex-column align-items-center justify-content-center py-5">
+                            <i class="bi bi-emoji-frown display-3 text-secondary mb-3"></i>
+                            <div class="alert alert-info text-center mb-0">Henüz portföyünüzde coin yok.</div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h4 class="card-title mb-3 text-success"><i class="bi bi-plus-circle me-2"></i>Yeni Coin Ekle</h4>
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                {
+                                    <li>@error.ErrorMessage</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                    <form asp-action="Add" method="post" class="needs-validation" novalidate>
+                        <div class="mb-3 position-relative">
+                            <label asp-for="NewCoin.CoinName" class="form-label">Coin Adı</label>
+                            <input asp-for="NewCoin.CoinName" class="form-control form-control-lg" id="coinNameInput" autocomplete="off" required />
+                            <div id="coinList" class="list-group position-absolute shadow-sm rounded w-100" style="z-index: 1000; display: none;"></div>
+                            <span asp-validation-for="NewCoin.CoinName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="NewCoin.Quantity" class="form-label">Adet</label>
+                            <input asp-for="NewCoin.Quantity" class="form-control form-control-lg" required />
+                            <span asp-validation-for="NewCoin.Quantity" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="NewCoin.PurchasePrice" class="form-label">Alış Fiyatı (₺)</label>
+                            <input asp-for="NewCoin.PurchasePrice" class="form-control form-control-lg" required />
+                            <span asp-validation-for="NewCoin.PurchasePrice" class="text-danger"></span>
+                        </div>
+                        <button type="submit" class="btn btn-success btn-lg w-100"><i class="bi bi-plus-circle me-1"></i> Ekle</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const input = document.getElementById('coinNameInput');
+        const list = document.getElementById('coinList');
+        let timeout = null;
+        input.addEventListener('input', function () {
+            clearTimeout(timeout);
+            const val = this.value.trim();
+            if (val.length < 1) { list.style.display = 'none'; return; }
+            timeout = setTimeout(() => {
+                fetch(`https://localhost:7095/api/coin/search?query=${encodeURIComponent(val)}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        list.innerHTML = '';
+                        if (data.length === 0) { list.style.display = 'none'; return; }
+                        data.forEach(c => {
+                            const item = document.createElement('button');
+                            item.type = 'button';
+                            item.className = 'list-group-item list-group-item-action';
+                            item.textContent = c;
+                            item.onclick = () => {
+                                input.value = c;
+                                list.style.display = 'none';
+                            };
+                            list.appendChild(item);
+                        });
+                        list.style.display = 'block';
+                    });
+            }, 200);
+        });
+        document.addEventListener('click', function (e) {
+            if (!input.contains(e.target) && !list.contains(e.target)) {
+                list.style.display = 'none';
+            }
+        });
+    </script>
+} 
