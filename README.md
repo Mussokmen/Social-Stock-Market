@@ -1,3 +1,3 @@
 # BorsaTakip
-# Social-Stock-Market
-# Social-Stock-Market
+# AI destekli
+
